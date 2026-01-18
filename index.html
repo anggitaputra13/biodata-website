@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anggita Putra | Software Engineer Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#020617',
+                        'dark-card': '#0f172a',
+                        'accent-indigo': '#6366f1',
+                        'accent-sky': '#0ea5e9',
+                        'code-bg': '#1e293b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    animation: {
+                        'marquee': 'marquee 20s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #94a3b8;
+            overflow-x: hidden;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #6366f1, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-glass {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Scrolled state for Header */
+        .nav-scrolled {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(16px);
+            height: 4.5rem !important;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .code-window {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .code-window:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .skill-icon-card {
+            background: #0f172a;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 180px;
+            height: 180px;
+        }
+
+        .skill-icon-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        .fade-enter-active, .fade-leave-active { transition: all 0.4s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; transform: scale(0.95); }
+
+        @keyframes subtle-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+        .floating { animation: subtle-float 6s ease-in-out infinite; }
+        
+        [v-cloak] { display: none; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .img-container {
+            position: relative;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .project-card-blog {
+            background: #111827;
+            border: 1px solid #1f2937;
+            transition: all 0.3s ease;
+        }
+        .project-card-blog:hover {
+            border-color: #6366f1;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -15px rgba(99, 102, 241, 0.4);
+        }
+
+        .marquee-wrapper:hover .animate-marquee {
+            animation-play-state: paused;
+        }
+
+        /* Interactive Link Underline */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background: linear-gradient(to right, #6366f1, #0ea5e9);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .nav-link:hover::after, .nav-link-active::after {
+            width: 100%;
+        }
+
+        /* Mobile Project Slider Logic */
+        @media (max-width: 767px) {
+            .mobile-project-slider {
+                display: flex !important;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 1.5rem;
+                padding-bottom: 1.5rem;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .mobile-project-slider::-webkit-scrollbar {
+                display: none;
+            }
+            .mobile-project-slider > div {
+                flex: 0 0 85%;
+                scroll-snap-align: center;
+            }
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500/30">
+
+    <div id="app" v-cloak>
+        <!-- Navbar -->
+        <nav :class="['fixed top-0 w-full z-50 nav-glass flex items-center h-20 transition-all duration-500', { 'nav-scrolled': isScrolled }]">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center w-full">
+                <a href="#" class="text-xl font-bold text-white tracking-tighter uppercase group flex items-center gap-1">
+                    <span class="text-accent-indigo group-hover:text-white transition-all duration-300 transform group-hover:-translate-x-1">{{ resume.firstName }}</span> 
+                    <span class="text-white group-hover:text-accent-indigo transition-all duration-300 transform group-hover:translate-x-1">{{ resume.lastName }}</span>
+                </a>
+                
+                <div class="hidden md:flex space-x-10 text-[11px] font-bold uppercase tracking-[0.2em]">
+                    <a v-for="item in navLinks" 
+                       :key="item" 
+                       :href="'#' + item.toLowerCase()" 
+                       :class="['nav-link transition-colors duration-300 hover:text-white', activeSection === item.toLowerCase() ? 'text-white nav-link-active' : 'text-slate-400']">
+                        {{ item }}
+                    </a>
+                </div>
+
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-2xl text-accent-indigo focus:outline-none p-2" aria-label="Toggle Menu">
+                    <i :class="mobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu Overlay -->
+            <transition name="fade">
+                <div v-if="mobileMenuOpen" class="md:hidden fixed inset-x-0 top-20 bg-dark/95 backdrop-blur-xl border-b border-slate-800 z-40 shadow-2xl">
+                    <div class="flex flex-col items-center py-10 space-y-8">
+                        <a v-for="item in navLinks" :key="item" :href="'#' + item.toLowerCase()" 
+                           @click="mobileMenuOpen = false"
+                           class="text-lg font-bold uppercase tracking-widest text-slate-300 hover:text-white transition-colors">
+                            {{ item }}
+                        </a>
+                        <div class="flex gap-6 text-xl pt-4 border-t border-slate-800 w-full justify-center">
+                            <a v-for="social in socials" :key="social.link" :href="social.link" target="_blank" class="text-slate-500 hover:text-accent-indigo transition-colors">
+                                <i :class="social.icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </nav>
+
+        <!-- Hero Section -->
+        <section id="home" class="min-h-screen pt-32 lg:pt-40 pb-20 px-6 lg:px-12 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20 relative">
+            <div class="w-full lg:w-1/2 space-y-6 lg:space-y-8 text-center lg:text-left z-10">
+                <div class="inline-block px-4 py-1.5 rounded-full bg-accent-indigo/10 border border-accent-indigo/20 text-accent-indigo text-[10px] lg:text-xs font-bold uppercase tracking-widest animate-pulse">
+                    {{ resume.status }}
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-[1.1]">
+                    {{ resume.titleLine1 }} <br class="hidden sm:block">
+                    <span class="gradient-text">{{ resume.titleLine2 }}.</span>
+                </h1>
+                <p class="text-slate-400 text-base sm:text-lg lg:text-xl leading-relaxed max-w-lg mx-auto lg:mx-0">
+                    Hi, I'm <span class="text-white">{{ resume.fullName }}</span>. {{ resume.shortBio }}
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#contact" class="px-10 py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-500 transition-all shadow-xl shadow-indigo-500/20 active:scale-95 text-center">
+                        Let's Talk
+                    </a>
+                    <a :href="resume.cvLink" target="_blank" class="px-10 py-4 border border-slate-700 text-white font-bold rounded-xl hover:bg-white hover:text-dark transition-all active:scale-95 text-center">
+                        Resume <i class="fas fa-download ml-2 text-xs"></i>
+                    </a>
+                </div>
+                <div class="flex justify-center lg:justify-start gap-6 text-2xl pt-6 text-gray-400">
+                    <a v-for="social in socials" :key="social.link" :href="social.link" target="_blank" class="hover:text-accent-indigo hover:scale-125 transition-all" :title="social.name">
+                        <i :class="social.icon"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-1/2 floating">
+                <div class="code-window rounded-2xl overflow-hidden bg-[#0f172a] mx-auto lg:mx-0">
+                    <div class="bg-slate-800/40 px-6 py-4 flex items-center justify-between border-b border-slate-700/50">
+                        <div class="flex space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-mono tracking-widest uppercase">profile.go</span>
+                    </div>
+                    <div class="p-5 lg:p-8 font-mono text-[11px] sm:text-sm lg:text-base leading-relaxed overflow-x-auto">
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">1</span> <span><span class="text-indigo-400">package</span> main</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">2</span> <span></span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">3</span> <span><span class="text-indigo-400">type</span> <span class="text-sky-400">SoftwareEngineer</span> <span class="text-indigo-400">struct</span> {</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">4</span> <span class="pl-4">Name <span class="text-indigo-400">string</span></span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">5</span> <span class="pl-4">CoreStack []<span class="text-indigo-400">string</span></span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">6</span> <span>}</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">7</span> <span></span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">8</span> <span><span class="text-indigo-400">func</span> <span class="text-sky-400">Me</span>() *<span class="text-sky-400">SoftwareEngineer</span> {</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">9</span> <span class="pl-4"><span class="text-indigo-400">return</span> &<span class="text-sky-400">SoftwareEngineer</span>{</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">10</span> <span class="pl-8 whitespace-nowrap">Name: <span class="text-amber-200">"{{ resume.fullName }}"</span>,</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">11</span> <span class="pl-8 whitespace-nowrap">CoreStack: []<span class="text-indigo-400">string</span>{<span class="text-amber-200">"Go"</span>, <span class="text-amber-200">"Python"</span>, <span class="text-amber-200">"JS"</span>},</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">12</span> <span class="pl-4">}</span></div>
+                        <div class="flex gap-4"><span class="text-slate-600 select-none w-4">13</span> <span>}</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 lg:py-32 px-6 section-reveal">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-12 lg:gap-20">
+                <div class="order-2 lg:order-1 text-center lg:text-left">
+                    <h2 class="text-xs font-bold text-accent-indigo mb-4 uppercase tracking-[0.3em] flex items-center justify-center lg:justify-start">
+                        <span class="w-8 lg:w-12 h-[2px] bg-indigo-500 mr-4"></span> About Me
+                    </h2>
+                    <h3 class="text-3xl lg:text-4xl font-bold text-white mb-6 lg:mb-8">{{ resume.aboutHeadline }}</h3>
+                    <div class="space-y-6 text-slate-400 text-base lg:text-lg leading-relaxed">
+                        <p v-for="(p, idx) in resume.aboutParagraphs" :key="idx" v-html="p"></p>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 flex justify-center">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-accent-indigo to-accent-sky rounded-[2.5rem] blur opacity-25 group-hover:opacity-75 transition duration-1000"></div>
+                        <div class="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-[2rem] overflow-hidden border border-slate-800 shadow-2xl img-container">
+                             <img :src="resume.profileImg" :alt="resume.fullName" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-20 lg:py-32 px-6 bg-slate-900/30">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-xs font-bold text-accent-indigo mb-12 lg:mb-16 uppercase tracking-[0.3em] text-center">Professional Journey</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                    <div v-for="exp in experience" :key="exp.company" 
+                         class="p-6 lg:p-10 rounded-3xl bg-dark-card border border-slate-800/50 hover:border-indigo-500/50 transition-all group relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-accent-indigo/5 rounded-full -mr-16 -mt-16 group-hover:bg-accent-indigo/10 transition-colors"></div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="w-10 h-10 lg:w-12 lg:h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center text-accent-indigo text-lg lg:text-xl group-hover:scale-110 transition-transform">
+                                <i :class="exp.icon"></i>
+                            </div>
+                            <span class="text-[9px] lg:text-[10px] font-bold text-slate-500 uppercase tracking-widest">{{ exp.period }}</span>
+                        </div>
+                        <h3 class="text-lg lg:text-xl font-bold text-white mb-1">{{ exp.role }}</h3>
+                        <p class="text-accent-sky text-xs lg:text-sm font-semibold mb-4">{{ exp.company }}</p>
+                        <p class="text-slate-400 text-xs lg:text-sm leading-relaxed mb-4">{{ exp.description }}</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span v-for="tag in exp.tags" :key="tag" class="text-[8px] lg:text-[9px] px-2 py-0.5 bg-slate-800 rounded text-slate-400 uppercase font-bold border border-slate-700/50">{{ tag }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section (Infinite Marquee with Manual Controls) -->
+        <section id="skills" class="py-20 lg:py-32 overflow-hidden border-y border-slate-800/30 relative">
+            <div class="max-w-7xl mx-auto px-6 mb-16 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <h2 class="text-xs font-bold text-accent-indigo mb-4 uppercase tracking-[0.3em] flex items-center justify-center md:justify-start">
+                        <span class="w-8 lg:w-12 h-[2px] bg-indigo-500 mr-4"></span> Technology Stack
+                    </h2>
+                    <h3 class="text-3xl font-bold text-white">Tools & Expertise</h3>
+                </div>
+                <!-- Manual Controls for Skills -->
+                <div class="flex gap-4">
+                    <button @click="scrollSkills('left')" class="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center text-white hover:bg-accent-indigo hover:border-accent-indigo transition-all active:scale-90">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button @click="scrollSkills('right')" class="w-12 h-12 rounded-full border border-slate-800 flex items-center justify-center text-white hover:bg-accent-indigo hover:border-accent-indigo transition-all active:scale-90">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="marquee-wrapper relative overflow-x-auto scrollbar-hide pb-4" ref="skillScroll">
+                <div class="flex animate-marquee whitespace-nowrap gap-10 lg:gap-12 items-center w-max">
+                    <div v-for="skill in doubledSkills" :key="skill.id" 
+                         class="skill-icon-card p-8 lg:p-12 rounded-[2rem] flex flex-col items-center justify-center gap-6 group shrink-0">
+                        <img :src="skill.logo" class="w-12 h-12 lg:w-16 lg:h-16 group-hover:scale-110 transition-transform" :class="{ 'invert': skill.invert }" :alt="skill.name">
+                        <span class="text-[10px] lg:text-xs font-bold uppercase tracking-widest text-slate-300 group-hover:text-accent-indigo transition-colors">{{ skill.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section (Improved with Slider and Toggle) -->
+        <section id="projects" class="py-20 lg:py-32 px-6 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-xs font-bold text-accent-indigo mb-4 uppercase tracking-[0.3em] flex items-center justify-center">
+                        <span class="w-8 lg:w-12 h-[2px] bg-indigo-500 mr-4"></span> Portfolio
+                    </h2>
+                    <h3 class="text-3xl lg:text-4xl font-bold text-white">Featured Projects</h3>
+                </div>
+
+                <div :class="['grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-700', { 'mobile-project-slider': !showAllProjects }]">
+                    <div v-for="project in displayedProjects" :key="project.title" 
+                         class="project-card-blog rounded-2xl overflow-hidden flex flex-col h-full group cursor-pointer"
+                         @click="selectedProject = project">
+                        
+                        <div class="p-4 flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-slate-800/50">
+                            <span>{{ project.timeAgo || 'Recent' }}</span>
+                            <div class="flex items-center gap-4">
+                                <span class="flex items-center gap-1"><i class="fas fa-eye"></i> {{ project.views || '1.2k' }}</span>
+                                <span class="flex items-center gap-1 group-hover:text-accent-indigo transition-colors"><i class="fas fa-heart"></i> {{ project.likes || '84' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="relative h-48 sm:h-56 img-container bg-[#0a0f1e]">
+                            <img :src="project.thumbnail" :alt="project.title" class="max-w-[90%] max-h-[85%] object-contain transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-indigo-900/10 group-hover:bg-transparent transition-colors"></div>
+                        </div>
+
+                        <div class="p-6 flex flex-col flex-1">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-[9px] px-2 py-0.5 bg-accent-indigo/10 text-accent-indigo rounded uppercase font-bold tracking-wider">{{ project.labels[0] }}</span>
+                                <span class="text-[9px] text-slate-500 font-mono tracking-tighter uppercase">{{ project.stack.split(',')[0] }}</span>
+                            </div>
+                            
+                            <h4 class="text-xl font-bold text-white mb-3 group-hover:text-accent-indigo transition-colors line-clamp-1">{{ project.title }}</h4>
+                            
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-3">
+                                {{ project.shortDesc }}
+                            </p>
+
+                            <div class="mt-auto pt-4 border-t border-slate-800/50 flex justify-between items-center">
+                                <button class="text-[11px] font-bold uppercase tracking-widest text-white group-hover:text-accent-indigo transition-all flex items-center gap-2">
+                                    Read More <i class="fas fa-arrow-right text-[9px]"></i>
+                                </button>
+                                <span class="text-[10px] font-mono text-slate-500">{{ project.readTime || '5 min read' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggle Button Logic -->
+                <div class="flex flex-col items-center mt-16 gap-6">
+                    <button v-if="!showAllProjects" @click="showAllProjects = true" class="px-8 py-3 bg-indigo-600/10 border border-indigo-500/30 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-full hover:bg-indigo-600 transition-all active:scale-95 flex items-center gap-3">
+                        Show More Projects <i class="fas fa-chevron-down"></i>
+                    </button>
+                    
+                    <div v-else class="flex flex-col items-center gap-6">
+                         <a href="https://github.com/anggitaputra13" target="_blank" class="px-8 py-3 bg-gradient-to-r from-accent-indigo to-indigo-700 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-full hover:shadow-xl hover:shadow-indigo-500/20 transition-all active:scale-95 flex items-center gap-3">
+                            View All on GitHub <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        <button @click="showAllProjects = false" class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
+                            Show Less
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="py-20 lg:py-32 px-6 bg-slate-900/10 section-reveal">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-xs font-bold text-accent-indigo mb-12 lg:mb-16 uppercase tracking-[0.3em] text-center">Education</h2>
+                <div class="max-w-3xl mx-auto space-y-8 lg:space-y-12">
+                    <div v-for="edu in education" :key="edu.school" class="relative pl-8 lg:pl-12 border-l-2 group" :class="edu.isCurrent ? 'border-accent-indigo' : 'border-slate-800'">
+                        <div class="absolute -left-[11px] top-0 w-5 h-5 rounded-full transition-all duration-500 group-hover:scale-125" :class="edu.isCurrent ? 'bg-accent-indigo shadow-[0_0_15px_rgba(99,102,241,0.5)]' : 'bg-slate-800'"></div>
+                        <span class="text-xs font-mono" :class="edu.isCurrent ? 'text-accent-indigo' : 'text-slate-500'">{{ edu.period }}</span>
+                        <h3 class="text-xl lg:text-2xl font-bold text-white mt-1 lg:mt-2 group-hover:text-accent-indigo transition-colors">{{ edu.school }}</h3>
+                        <p class="text-slate-400 text-base lg:text-lg">{{ edu.degree }}</p>
+                        <p v-if="edu.gpa" class="text-accent-sky font-bold text-[10px] lg:text-sm mt-1 lg:mt-2">GPA: {{ edu.gpa }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 lg:py-32 px-6 relative">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20">
+                <div class="lg:w-1/2 text-center lg:text-left">
+                    <h2 class="text-xs font-bold text-accent-indigo mb-4 uppercase tracking-[0.3em] flex items-center justify-center lg:justify-start">
+                        <span class="w-8 lg:w-12 h-[2px] bg-indigo-500 mr-4"></span> Contact
+                    </h2>
+                    <h3 class="text-3xl lg:text-4xl font-bold text-white mb-8">Let's build something exceptional.</h3>
+                    <div class="space-y-6 lg:space-y-10">
+                        <a v-for="contact in contactItems" :key="contact.value" :href="contact.link" class="flex items-center gap-6 lg:gap-8 group text-left max-w-md mx-auto lg:mx-0">
+                            <div class="shrink-0 w-12 h-12 lg:w-16 lg:h-16 bg-white/5 rounded-2xl flex items-center justify-center text-white text-xl lg:text-2xl group-hover:bg-indigo-600 group-hover:scale-110 transition-all border border-slate-800 group-hover:border-indigo-500/50">
+                                <i :class="contact.icon"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{{ contact.label }}</p>
+                                <span class="text-base lg:text-xl text-white break-all group-hover:text-accent-indigo transition-colors">{{ contact.value }}</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 bg-dark-card p-6 lg:p-12 rounded-[2.5rem] border border-slate-800 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-indigo to-accent-sky"></div>
+                    <form @submit.prevent="handleSubmit" class="space-y-6 lg:space-y-8">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Name</label>
+                                <input v-model="form.name" type="text" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 lg:px-6 py-3 lg:py-4 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all" placeholder="Enter name" required>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Email</label>
+                                <input v-model="form.email" type="email" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 lg:px-6 py-3 lg:py-4 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all" placeholder="email@provider.com" required>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Message</label>
+                            <textarea v-model="form.message" rows="4" class="w-full bg-slate-900/50 border border-slate-800 rounded-xl px-4 lg:px-6 py-3 lg:py-4 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all" placeholder="Tell me about your project..." required></textarea>
+                        </div>
+                        <button type="submit" :disabled="isSubmitting" class="w-full py-4 lg:py-5 bg-indigo-600 text-white font-bold rounded-xl uppercase tracking-[0.2em] text-[10px] lg:text-xs hover:bg-indigo-500 transition-all shadow-xl shadow-indigo-500/20 active:scale-[0.98] disabled:opacity-50">
+                            {{ isSubmitting ? 'Sending...' : 'Send Message' }} <i class="fas fa-paper-plane ml-3"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notification Toast -->
+        <transition name="fade">
+            <div v-if="notification.show" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] px-6 py-4 bg-accent-indigo text-white font-bold rounded-2xl shadow-2xl shadow-indigo-500/40 flex items-center gap-4">
+                <i class="fas fa-check-circle text-xl"></i>
+                <span>{{ notification.message }}</span>
+                <button @click="notification.show = false" class="ml-4 opacity-50 hover:opacity-100"><i class="fas fa-times"></i></button>
+            </div>
+        </transition>
+
+        <!-- Footer -->
+        <footer class="py-12 lg:py-16 border-t border-slate-800/50 text-center bg-slate-900/20">
+            <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-center md:text-left">
+                    <p class="text-white font-bold tracking-tighter uppercase mb-2">{{ resume.fullName }}</p>
+                    <p class="text-slate-500 text-[10px] lg:text-xs tracking-widest uppercase">© {{ new Date().getFullYear() }}</p>
+                </div>
+                <div class="flex gap-3 lg:gap-4">
+                    <a v-for="social in socials" :key="social.link" :href="social.link" target="_blank" 
+                       class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500 hover:scale-110 transition-all"
+                       :title="social.name">
+                        <i :class="social.icon"></i>
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Project Modal -->
+        <transition name="fade">
+            <div v-if="selectedProject" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-dark/95 backdrop-blur-md" @click.self="selectedProject = null">
+                <div class="bg-dark-card border border-slate-800 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                    <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-accent-indigo">Project Details</span>
+                        <button @click="selectedProject = null" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors focus:outline-none"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="p-6 lg:p-10 space-y-6 overflow-y-auto">
+                        <div class="w-full h-48 sm:h-72 rounded-2xl overflow-hidden border border-slate-800 shadow-lg img-container">
+                            <img :src="selectedProject.thumbnail" class="max-w-[95%] max-h-[95%] object-contain">
+                        </div>
+                        <div>
+                            <h3 class="text-2xl lg:text-3xl font-bold text-white mb-2">{{ selectedProject.title }}</h3>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span v-for="tech in selectedProject.techArray" :key="tech" class="px-2 py-1 bg-indigo-500/10 text-accent-indigo text-[10px] font-bold rounded-lg border border-indigo-500/20 uppercase">
+                                    {{ tech }}
+                                </span>
+                            </div>
+                            <p class="text-slate-400 text-sm lg:text-lg leading-relaxed">{{ selectedProject.fullDesc || selectedProject.shortDesc }}</p>
+                        </div>
+                        <div class="pt-6 border-t border-slate-800 flex flex-col sm:flex-row gap-4">
+                            <button @click="selectedProject = null" class="w-full sm:flex-1 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-700 transition-all">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, computed, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const mobileMenuOpen = ref(false);
+                const isScrolled = ref(false);
+                const activeSection = ref('home');
+                const selectedProject = ref(null);
+                const isSubmitting = ref(false);
+                const showAllProjects = ref(false); 
+                const navLinks = ['About', 'Experience', 'Skills', 'Projects', 'Contact'];
+                
+                const skillScroll = ref(null);
+
+                const notification = reactive({
+                    show: false,
+                    message: ''
+                });
+
+                const resume = reactive({
+                    firstName: 'Anggita',
+                    lastName: 'Putra',
+                    fullName: 'Putu Mas Anggita Putra',
+                    status: 'Available for opportunities',
+                    titleLine1: 'Software',
+                    titleLine2: 'Engineer',
+                    shortBio: 'Dedicated Software Engineer with 5+ years of expertise in architecting high-performance backends and scalable microservices using Go, Python, Javascript and modern cloud technologies.',
+                    profileImg: 'image/profile.jpeg',
+                    cvLink: 'https://drive.google.com/file/d/1ySU7ihEtwyZJ-eoQ1d0brOrYHqeKf436/view?usp=drive_link',
+                    aboutHeadline: 'Crafting Scalable Digital Architecture.',
+                    aboutParagraphs: [
+                        'With over <span class="text-white font-semibold">5 years of professional experience</span>, I bridge the gap between complex business requirements and robust technical implementations.',
+                        'Currently working at <span class="text-white underline decoration-accent-indigo underline-offset-4 text-sm sm:text-base">Bank Rakyat Indonesia</span>, I\'m deep-diving into the world of fintech, building and maintaining microservices that handle critical financial data.',
+                        'I believe in the "Right tool for the right job" philosophy, which is why I\'ve mastered a diverse stack including <span class="text-accent-sky font-medium">Go, Python, and Javascript</span>.'
+                    ]
+                });
+
+                const experience = ref([
+                    { period: '2024 - Present', role: 'Software Engineer', company: 'PT Bank Rakyat Indonesia (Outsource)', icon: 'fas fa-university', description: 'Maintaining critical banking service APIs using Goravel. Focused on Kafka integration and gRPC communication between services.', tags: ['Golang', 'Kafka', 'gRPC', 'Goravel'] },
+                    { period: '2022 - 2024', role: 'Software Engineer', company: 'PT Bimasakti Alterra', icon: 'fas fa-layer-group', description: 'Served as a Team Co-Lead. Developed SHRIS & Payroll Management systems using microservices architecture and managed staging environments.', tags: ['Lead', 'Microservices', 'Payroll', 'Staging'] },
+                    { period: '2021 - 2022', role: 'Backend Developer', company: 'Zettabyte Pte Ltd', icon: 'fas fa-database', description: 'Involved in ERP system maintenance. Built GraphQL APIs with Node.js and MongoDB using Agile methodologies.', tags: ['GraphQL', 'Node.js', 'MongoDB', 'Agile'] },
+                    { period: '2021', role: 'Backend Developer', company: 'PT Bangun Inovasi Teknologi', icon: 'fas fa-code', description: 'API development for various projects including Wallfame and Ruang Medis using Laravel, Django, and PostgreSQL.', tags: ['Laravel', 'Django', 'Postgres', 'API'] }
+                ]);
+
+                const skills = [
+                    { id: 1, name: 'Golang', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original-wordmark.svg' },
+                    { id: 2, name: 'Python', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+                    { id: 3, name: 'JS', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+                    { id: 4, name: 'PostgreSQL', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
+                    { id: 5, name: 'Docker', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+                    { id: 6, name: 'Redis', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg' },
+                    { id: 7, name: 'Kafka', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apachekafka/apachekafka-original.svg', invert: true },
+                    { id: 8, name: 'GraphQL', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg' },
+                    { id: 9, name: 'Laravel', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg' },
+                    { id: 10, name: 'Django', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg', invert: true },
+                    { id: 11, name: 'Git', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
+                    { id: 12, name: 'Jira', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg' },
+                    { id: 13, name: 'RabbitMQ', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rabbitmq/rabbitmq-original.svg' },
+                    { id: 14, name: 'Lumen', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg' },
+                    { id: 15, name: 'Grafana', logo: 'https://www.vectorlogo.zone/logos/grafana/grafana-icon.svg' },
+                ];
+
+                const doubling = [...skills.map(s => ({...s, id: s.id + 'a'})), ...skills.map(s => ({...s, id: s.id + 'b'}))];
+                const doubledSkills = ref(doubling);
+
+                const projects = ref([
+                    { title: 'Briguna Microsite', labels: ['Fintech', 'Golang'], thumbnail: 'image/microsite.jpeg', timeAgo: '1 month ago', readTime: '4 min read', views: '2.4k', likes: '124', shortDesc: 'A scalable banking microsite built for high-volume concurrent lead submissions supporting Briguna financial services.', fullDesc: 'Built with Goravel, the Briguna Microsite is engineered to handle heavy traffic and large-scale lead generation for banking applications. It integrates Kafka for real-time lead processing, Redis for high-speed caching of frequently accessed financial data, and ensures reliable performance under peak user demand.', stack: 'Go, Goravel, Kafka, Redis', techArray: ['Golang', 'gRPC', 'Redis', 'Goravel', 'MySQL'] },
+                    { title: 'Briguna Dashboard', labels: ['Fintech', 'Golang'], thumbnail: 'image/dashboard.jpeg', timeAgo: '1 month ago', readTime: '4 min read', views: '2.4k', likes: '124', shortDesc: 'An internal banking dashboard built to monitor, manage, and analyze Briguna lead performance in real time.', fullDesc: 'The Briguna Dashboard is a data-driven internal platform designed to give banking teams real-time visibility into lead acquisition and performance metrics. It features interactive dashboards, role-based access control, and seamless integration with backend services to track lead status, conversion rates, and operational insights, enabling faster decision-making and efficient workflow management.', stack: 'Go, gRPC, PostgreSQL, Goravel', techArray: ['Golang', 'gRPC', 'PostgreSQL', 'Goravel', 'Docker'] },                   
+                    { title: 'SHRIS & Payroll', labels: ['Microservices', 'ERP'], thumbnail: 'image/kolega.webp', timeAgo: '1 year ago', readTime: '8 min read', views: '4.1k', likes: '312', shortDesc: 'An enterprise HR application designed to streamline employee management, attendance tracking, and HR operations.', fullDesc: 'KolehaHR Apps is a comprehensive human resource management platform built to support enterprise-scale workforce operations. The system centralizes employee data, attendance, leave management, and performance tracking through a secure and role-based interface. Designed for scalability and reliability, it integrates seamlessly with internal systems to improve operational efficiency and provide actionable HR insights.', stack: 'Go, Fiber, Postgres, Docker', techArray: ['Microservices', 'Fiber', 'Docker', 'Redis', 'PostgreSQL'] },
+                    { title: 'ADMTC ERP', labels: ['Enterprise', 'Fullstack'], thumbnail: 'image/admtc.jpeg', timeAgo: '2 years ago', readTime: '7 min read', views: '3.2k', likes: '215', shortDesc: 'Comprehensive management platform for academic and administrative workflows.', fullDesc: 'Refined and maintained GraphQL APIs for flexible frontend data requirements. Managed complex database schemas in MongoDB for dynamic administrative entities.', stack: 'Node.js, GraphQL, MongoDB', techArray: ['Node.js', 'GraphQL', 'MongoDB'] },
+                    { title: 'EDH Platform', labels: ['Web App', 'GraphQL'], thumbnail: 'image/edh.jpeg', timeAgo: '2 years ago', readTime: '6 min read', views: '1.9k', likes: '102', shortDesc: 'Specialized administrative system for international education workflows.', fullDesc: 'Built features for student tracking and documentation using GraphQL. Focused on high availability and resolving critical backend bugs.', stack: 'Node.js, MongoDB, Nuxt', techArray: ['Node.js', 'MongoDB', 'GraphQL'] },
+                    { title: 'Ruang Medis', labels: ['Healthcare', 'Portal'], thumbnail: 'image/ruangmedis.jpeg', timeAgo: '3 years ago', readTime: '6 min read', views: '1.8k', likes: '94', shortDesc: 'A centralized hospital information system (HIS) focused on secure patient records and medical staff workflows.', fullDesc: 'Developed with Django to ensure robust security for medical data. Optimized PostgreSQL queries to handle large patient databases efficiently.', stack: 'Python, Django, PostgreSQL', techArray: ['Python', 'Django', 'PostgreSQL', 'Healthcare'] },
+                ]);
+
+                const displayedProjects = computed(() => {
+                    return showAllProjects.value ? projects.value : projects.value.slice(0, 3);
+                });
+
+                const education = ref([
+                    { period: '2017 - 2021', school: 'Udayana University', degree: 'Bachelor of Computer Science', gpa: '3.82 / 4.0', isCurrent: true },
+                    { period: '2014 - 2017', school: 'SMKN 1 Denpasar', degree: 'Network and System Administrator', isCurrent: false }
+                ]);
+
+                const contactItems = ref([
+                    { label: 'Email', value: 'anggitaputra13@gmail.com', icon: 'fas fa-envelope', link: 'mailto:anggitaputra13@gmail.com' },
+                    { label: 'Phone', value: '+62 895 37000 8969', icon: 'fas fa-phone', link: 'tel:+62895370008969' },
+                    { label: 'Location', value: 'Jakarta, Indonesia', icon: 'fas fa-map-marker-alt', link: '#' }
+                ]);
+
+                const socials = ref([
+                    { name: 'GitHub', icon: 'fab fa-github', link: 'https://github.com/anggitaputra13' },
+                    { name: 'LinkedIn', icon: 'fab fa-linkedin', link: 'https://www.linkedin.com/in/anggitaputra13/' },
+                    { name: 'Instagram', icon: 'fab fa-instagram', link: 'https://www.instagram.com/anggitaputra13/' },
+                    { name: 'Personal Web', icon: 'fas fa-globe', link: 'https://anggita-putra.netlify.app' }
+                ]);
+
+                const form = reactive({ name: '', email: '', message: '' });
+
+                const handleSubmit = () => {
+                    isSubmitting.value = true;
+                    const subject = encodeURIComponent(`Portfolio Message from ${form.name}`);
+                    const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`);
+                    const mailtoLink = `mailto:anggitaputra13@gmail.com?subject=${subject}&body=${body}`;
+                    window.location.href = mailtoLink;
+
+                    setTimeout(() => {
+                        form.name = ''; form.email = ''; form.message = '';
+                        isSubmitting.value = false;
+                        notification.message = 'Opening your email client...';
+                        notification.show = true;
+                        setTimeout(() => notification.show = false, 5000);
+                    }, 1000);
+                };
+
+                const handleScroll = () => {
+                    isScrolled.value = window.scrollY > 50;
+                    const sections = ['home', 'about', 'experience', 'skills', 'projects', 'education', 'contact'];
+                    let current = 'home';
+                    for (const section of sections) {
+                        const el = document.getElementById(section);
+                        if (el) {
+                            const rect = el.getBoundingClientRect();
+                            if (rect.top <= 150) current = section;
+                        }
+                    }
+                    activeSection.value = current;
+                };
+
+                const scrollSkills = (direction) => {
+                    if (skillScroll.value) {
+                        const amount = direction === 'left' ? -300 : 300;
+                        skillScroll.value.scrollBy({ left: amount, behavior: 'smooth' });
+                    }
+                };
+
+                onMounted(() => {
+                    window.addEventListener('scroll', handleScroll);
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) entry.target.classList.add('active');
+                        });
+                    }, { threshold: 0.1 });
+                    document.querySelectorAll('.reveal').forEach(section => observer.observe(section));
+                });
+
+                return {
+                    mobileMenuOpen, selectedProject, isSubmitting, navLinks,
+                    resume, experience, skills, doubledSkills, projects, displayedProjects, education, contactItems, socials,
+                    form, handleSubmit, notification, isScrolled, activeSection, showAllProjects,
+                    skillScroll, scrollSkills
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
